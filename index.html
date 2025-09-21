@@ -6,795 +6,557 @@
   <title>15 Anos – Lia Isabelli</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-/* 1) Convite como imagem: garante render bonito em qualquer tela */
-.invite__card{
-  max-width: 720px;           /* um pouco maior no desktop */
-  width: min(92vw, 720px);
-  padding: 16px;              /* não precisa grande padding quando é imagem */
-  background: transparent;    /* some o vidro por trás da imagem */
-  border: 0;
-  box-shadow: none;
-}
-.invite__card img{
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(10,16,28,.28);
-}
+    :root{
+      --serenity:#6b84c4;
+      --silver:linear-gradient(90deg,#e3e6eb,#f7f7f7,#d0d3d8);
+      --glass-bg: rgba(255,255,255,.10);
+      --glass-brd: rgba(255,255,255,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0}
+    body{
+      background:var(--serenity);
+      overflow-x:hidden; min-height:100vh;
+      display:flex; flex-direction:column; align-items:center;
+      position:relative; font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
 
-/* 2) Posição do bloco principal */
-#invite{
-  margin-top: -80px;          /* sobe um pouco no desktop */
-}
-@media (max-width: 640px){
-  #invite{ margin-top: -20px; } /* menos agressivo no mobile */
-  .invite__wrap{ padding: 16px 14px 40px; }
-}
+    /* background stars */
+    .sparkles{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:1}
+    .sparkles i{position:absolute; width:3px; height:3px; border-radius:50%; filter:drop-shadow(0 0 6px rgba(255,255,255,.9)); opacity:.85; animation:float 12s linear infinite, twinkle 2.6s ease-in-out infinite}
+    @keyframes twinkle{0%,100%{opacity:.3}50%{opacity:.95}}
+    @keyframes float{0%{transform:translateY(110vh)}100%{transform:translateY(-10vh)}}
 
-/* 3) Botões de ação: toques mais confortáveis em telas pequenas */
-.actions{ gap: 28px; margin: 26px 0 48px; }
-.action{ width: 96px; height: 96px; }
-@media (max-width: 480px){
-  .action{ width: 84px; height: 84px; }
-}
+    /* splash monogram */
+    .splash__content{text-align:center; z-index:3; position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh}
+    .monogram img{width:700px; max-width:95vw; filter:drop-shadow(0 10px 18px rgba(0,0,0,.25)); animation:reveal 1200ms ease-out forwards, shimmer 5s infinite; opacity:0; transform:translateY(0) scale(.95); margin-bottom:20px}
+    @keyframes reveal{0%{opacity:0; transform:scale(1.1); filter:blur(12px)}100%{opacity:1; transform:scale(1); filter:blur(0)}}
+    @keyframes shimmer{0%,100%{filter:drop-shadow(0 10px 18px rgba(0,0,0,.25)) drop-shadow(0 0 8px rgba(255,255,255,.6))}50%{filter:drop-shadow(0 12px 22px rgba(0,0,0,.3)) drop-shadow(0 0 18px rgba(255,255,255,.9))}}
 
-/* 4) Contagem regressiva: aproxima do card e dá moldurinha “vidro” */
-.countdown-wrap{
-  margin-top: 10px;           /* aproxima do convite */
-  display: flex; justify-content: center;
-}
-.countdown{
-  padding: 10px 16px;
-  border-radius: 16px;
-  background: rgba(255,255,255,.10);
-  border: 1px solid rgba(255,255,255,.28);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 6px 16px rgba(16,22,35,.22), inset 0 1px 4px rgba(255,255,255,.22);
-  gap: 12px;
-}
-.cd-item div{ font-size: clamp(22px, 5vw, 36px); } /* escala bem no mobile */
-.countdown span{ font-size: clamp(16px, 4.5vw, 22px); }
+    /* invite (container principal aparece depois do envelope) */
+    #invite{opacity:0; transform:translateY(40px); transition:opacity 900ms ease, transform 900ms ease; position:relative; z-index:2; width:100%; display:flex; justify-content:center; margin-top:24px}
+    #invite.show{opacity:1; transform:translateY(0)}
 
-/* 5) Envelope: já é responsivo, só reduz um pouco em telas muito pequenas */
-@media (max-width: 390px){
-  .env__envelope{ --w: 92vw; }
-}
+    .invite__wrap{display:grid; gap:24px; place-items:center; padding:24px 16px 56px}
 
-/* 6) Modais: largura e padding confortáveis em mobile */
-.modal__card{
-  width: min(680px, 92vw);
-  padding: clamp(18px, 3.5vw, 28px);
-}
+    /* Card apenas com a imagem (sem fundo/borda/sombra) */
+    .invite__card{
+      max-width:600px; width:92vw;
+      margin:20px auto; padding:0;
+      background:none; border:none; box-shadow:none; border-radius:0;
+      position:relative; overflow:visible; animation:fadeUp 1s ease forwards; text-align:center;
+    }
+    .invite__card img{display:block; width:100%; height:auto; border-radius:16px}
+    @keyframes fadeUp{0%{opacity:0; transform:translateY(20px)}100%{opacity:1; transform:translateY(0)}}
 
-/* 7) Safe-area (notch/iPhone) */
-@supports (padding: max(0px)) {
-  body { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
-}
+    /* Datas/horas (se usar) */
+    .date-time{display:flex; justify-content:center; align-items:flex-start; gap:80px; margin:10px 0 20px; animation:fadeUp .8s ease .6s both}
+    .date-block,.time-block{display:flex; flex-direction:column; align-items:center; min-width:120px}
+    .day,.hour{font-size:90px; font-weight:900; line-height:1; color:#fff; text-shadow:0 0 10px rgba(255,255,255,.5); text-align:center}
+    .month,.label{font-size:22px; font-weight:700; text-transform:uppercase; color:#f1f3f8; letter-spacing:.12em; margin-top:8px; text-align:center}
+    .separator{width:2px; height:110px; background:var(--silver); border-radius:2px; align-self:center}
+    .place{font-size:16px; margin-top:14px; color:#f4f4f4; animation:fadeUp .8s ease .8s both}
+    .dress{margin-top:8px; color:#e0e0e0; font-weight:600; animation:fadeUp .8s ease 1s both}
 
- .countdown-wrap {
-  border: 1px solid rgba(255,255,255,.35);
-  border-radius: 12px; /* ou 20px se quiser mais arredondado */
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
+    /* Ações */
+    .actions{display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin:10px 0 60px; animation:fadeUp .8s ease 1.2s both}
+    .action{width:110px; height:110px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,.12); border:1px solid var(--glass-brd); box-shadow:0 4px 12px rgba(16,22,35,.25), inset 0 1px 4px rgba(255,255,255,.25); transition:transform .25s ease, box-shadow .25s ease}
+    .action:hover{transform:translateY(-5px) scale(1.08); box-shadow:0 8px 18px rgba(16,22,35,.35), inset 0 2px 6px rgba(255,255,255,.3)}
+    .action img{width:42px; height:42px; object-fit:contain}
 
+    /* ===== CONTAGEM REGRESSIVA – clean, com respiro e sem bordas duplas ===== */
+    .countdown-wrap{
+      margin: 6px 0 22px;
+      display: flex;
+      justify-content: center;
+    }
+    .countdown{
+      display:flex; align-items:flex-end;
+      gap: clamp(16px, 4vw, 36px);
+      padding: clamp(10px, 2vw, 14px) clamp(16px, 4vw, 28px);
+      background: transparent;                     /* sem fundo/vidro */
+      border: 1px solid rgba(255, 255, 255, 0);     /* borda única */
+      border-radius: 10px;                         /* 0 para reto */
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      color:#fff;
+    }
+    .cd-item{ text-align:center; min-width: clamp(64px, 14vw, 96px); }
+    .cd-item div{ font-size: clamp(28px, 6vw, 40px); font-weight: 800; line-height: 1; }
+    .cd-item small{ display:block; margin-top:6px; font-size: clamp(10px, 2.6vw, 12px); letter-spacing:.08em; opacity:.85; }
+    .countdown span{ align-self:center; opacity:.5; font-weight:700; font-size: clamp(18px, 5vw, 26px); }
+    /* garante que não exista brilho/borda dupla */
+    .countdown-wrap::before, .countdown-wrap::after{ content:none !important; }
 
-/* brilho interno sutil */
-.countdown-wrap::before{
-  content:"";
-  position:absolute; inset:0;
-  border-radius:inherit;
-  box-shadow: inset 0 1px 10px rgba(255,255,255,.18),
-              inset 0 -1px 6px rgba(16,22,35,.18);
-  pointer-events:none;
-}
+    /* ===== MODAIS (Cristal) ===== */
+    .modal{position:fixed; inset:0; display:none; place-items:center; z-index:10}
+    .modal.show{display:grid}
+    .modal__backdrop{position:absolute; inset:0; background:rgba(10,16,28,.35); backdrop-filter:blur(6px)}
+    .modal__card{position:relative; width:min(680px,92vw); border-radius:28px; padding:28px 24px; background:var(--glass-bg); border:1px solid var(--glass-brd); backdrop-filter:blur(18px) saturate(160%); -webkit-backdrop-filter:blur(18px) saturate(160%); box-shadow:0 12px 30px rgba(10,16,28,.35), inset 0 1px 6px rgba(255,255,255,.2)}
+    .modal__title{margin:0 0 14px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#f4f7ff; text-align:center}
+    .modal__row{display:grid; gap:14px; margin-top:8px}
+    .field{display:flex; flex-direction:column; gap:8px}
+    .field label{font-size:13px; color:#e7eaf6; letter-spacing:.06em}
+    .input, textarea, select{border-radius:16px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.12); color:#fff; padding:14px 16px; outline:none; box-shadow:inset 0 1px 3px rgba(0,0,0,.12)}
+    textarea{min-height:96px; resize:vertical}
+    .toggle-row{display:flex; align-items:center; gap:10px; margin-top:4px}
+    .toggle-row input{accent-color:#cfe0ff}
+    .guest-list{display:none; gap:10px; margin-top:10px}
+    .guest-list.show{display:grid}
+    .guest-row{display:grid; grid-template-columns:1fr 150px 36px; gap:8px; align-items:center}
+    .guest-row .remove{height:40px; border-radius:10px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.08); color:#fff; cursor:pointer}
+    .add-guest{margin-top:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.12); color:#fff; font-weight:600; cursor:pointer}
+    .modal__actions{display:flex; justify-content:space-between; gap:12px; margin-top:18px}
+    .btn{flex:1; padding:14px 16px; border-radius:16px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.12); color:#fff; font-weight:700; letter-spacing:.06em; cursor:pointer; transition:transform .2s ease, box-shadow .2s ease}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(16,22,35,.35)}
+    .btn--primary{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.1))}
+    .btn--ghost{background:transparent}
+    .close-x{position:absolute; top:10px; right:12px; background:transparent; border:none; color:#e7eaf6; font-size:22px; cursor:pointer}
+    .hint{font-size:12px; color:#dde3ff; opacity:.8; margin-top:6px}
+    .gifts{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-top:6px}
+    .gift-card{background:rgba(255,255,255,.12); border:1px solid var(--glass-brd); border-radius:20px; padding:16px; color:#fff; text-align:center; box-shadow:0 4px 12px rgba(16,22,35,.25), inset 0 1px 4px rgba(255,255,255,.25)}
+    .gift-card h3{margin:0 0 8px; font-size:16px; color:#f7f7f7}
+    .gift-card p{margin:0; font-size:13px; color:#eaeaea}
+    .gift-card.obs{background:rgba(255,255,255,.18); box-shadow:0 6px 16px rgba(16,22,35,.28), inset 0 1px 6px rgba(255,255,255,.3)}
 
-/* pontinhos prateados/azuis nas bordas */
-.countdown-wrap::after{
-  content:"";
-  position:absolute; inset:-2px;
-  border-radius:inherit; pointer-events:none; mix-blend-mode:screen; opacity:.65;
-  background:
-    radial-gradient(12px 12px at 10% 12%, rgba(255,255,255,.7), transparent 60%),
-    radial-gradient(12px 12px at 90% 18%, rgba(175,198,255,.65), transparent 60%),
-    radial-gradient(10px 10px at 86% 86%, rgba(255,255,255,.55), transparent 60%);
-}
+    /* ENVELOPE OVERLAY */
+    .env{ position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(20, 30, 60, .32); backdrop-filter: blur(8px) saturate(140%); -webkit-backdrop-filter: blur(8px) saturate(140%); }
+    .env[hidden]{ display:none; }
+    .env__stage{ position: relative; display:grid; place-items:center; }
+    .env__envelope{ --w: clamp(320px, 86vw, 760px); --h: calc(var(--w) * 0.62); width: var(--w); height: var(--h); position:relative; transform-style: preserve-3d; perspective: 1200px; filter: drop-shadow(0 24px 36px rgba(10,16,28,.35)); }
+    .env__back{ position:absolute; inset:0; border-radius:22px; background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12)); border:1px solid rgba(255,255,255,.45); box-shadow: inset 0 1px 8px rgba(255,255,255,.22); z-index:0; }
+    .env__front{ position:absolute; left:0; right:0; bottom:0; height: 62%; background: rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.45); border-top:none; border-bottom-left-radius:22px; border-bottom-right-radius:22px; box-shadow: inset 0 1px 7px rgba(255,255,255,.24); z-index:1; }
+    .env__flap{ position:absolute; left:0; right:0; top:0; height:58%; transform-origin: top center; transform: rotateX(0deg); transition: transform .95s cubic-bezier(.2,.75,.18,1); background: conic-gradient(from 180deg at 50% 100%, rgba(255,255,255,.26), rgba(255,255,255,0) 62%); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); border-top-left-radius:22px; border-top-right-radius:22px; filter: drop-shadow(0 10px 18px rgba(16,22,35,.28)); z-index:2; pointer-events:none; }
+    .env__seal{ position:absolute; left:50%; top:42%; transform: translate(-50%, -50%); width: clamp(140px, 18vw, 200px); height: clamp(140px, 18vw, 200px); border: none !important; background: none !important; box-shadow: none !important; border-radius:50%; display:grid; place-items:center; cursor:pointer; z-index:3; pointer-events:auto; transition: transform .18s ease, opacity .3s ease; }
+    .env__seal::before,.env__seal::after{ content:none !important; }
+    .env__seal img{ width:100%; height:100%; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.25)); }
+    .env__seal:hover{ transform: translate(-50%, -50%) scale(1.04); }
+    .env.is-opening .env__flap{ transform: rotateX(-176deg); }
+    .env.is-opening .env__seal{ opacity:0; pointer-events:none; }
+    .invite__card.raise{ animation: invite-pop .65s cubic-bezier(.2,.75,.18,1) forwards; }
+    @keyframes invite-pop{0%{ transform: translateY(24px) scale(.985); opacity: 0 }60%{ transform: translateY(-2px) scale(1.002); opacity: .98 }100%{ transform: translateY(0) scale(1); opacity: 1 }}
 
-@media (max-width:520px){
-  .countdown-wrap{
-    margin-top: -16px;
-    padding: 10px 14px;
-    border-radius: 18px;
-  }
-}
+    /* FAIRY FX */
+    .fx-layer{ position: fixed; inset: 0; z-index: 99999; pointer-events:none; overflow:hidden; isolation:isolate; backface-visibility:hidden; will-change:transform,opacity; }
+    .fx-layer::before{ content:""; position:absolute; inset:0; background: radial-gradient(circle at 50% 45%, rgba(255,255,255,.80) 0%, rgba(255,255,255,.45) 28%, rgba(255,255,255,.16) 55%, rgba(255,255,255,0) 78%); filter: blur(10px); animation: fx-flash 1.1s ease-out forwards; }
+    @keyframes fx-flash{ 0%{opacity:0; transform:scale(.9)} 30%{opacity:1; transform:scale(1)} 100%{opacity:0; transform:scale(1.05)} }
+    .fx-spark{ position:absolute; width:4px; height:4px; border-radius:50%; background: radial-gradient(circle, #fff, rgba(225,230,255,.9) 65%, rgba(255,255,255,0) 70%); filter: drop-shadow(0 0 10px rgba(255,255,255,.9)); opacity:0; animation: fx-spark-pop 1.9s ease-out forwards; }
+    @keyframes fx-spark-pop{ 0%{ transform: translate3d(0,0,0) scale(.4); opacity:0 } 12%{ opacity:1 } 70%{ opacity:1 } 100%{ transform: translate3d(var(--dx), var(--dy), 0) scale(1); opacity:0 } }
+    .fx-spark.crystal{ width:0; height:0; border:none; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:10px solid rgba(255,255,255,.85); filter: drop-shadow(0 0 12px rgba(255,255,255,.85)); transform-origin:50% 80%; animation: fx-crystal 1.1s ease-out forwards; }
+    @keyframes fx-crystal{ 0%{ transform: translate3d(0,0,0) rotate(-10deg) scale(.6); opacity:0 } 15%{ opacity:1 } 100%{ transform: translate3d(var(--dx), var(--dy), 0) rotate(10deg) scale(1); opacity:0 } }
+    @media (prefers-reduced-motion: reduce){ .fx-layer::before, .fx-spark{ animation-duration:.01ms; animation-iteration-count:1; } }
 
-  :root{
-    --serenity:#6b84c4;
-    --silver:linear-gradient(90deg,#e3e6eb,#f7f7f7,#d0d3d8);
-    --glass-bg: rgba(255,255,255,.10);
-    --glass-brd: rgba(255,255,255,.35);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%; margin:0}
-  body{background:var(--serenity); overflow-x:hidden; min-height:100vh; display:flex; flex-direction:column; align-items:center; position:relative; font-family:"Inter",sans-serif;}
+    /* CLICK FX (mantido) */
+    .click-fx{ position:fixed; inset:0; pointer-events:none; z-index:70; }
+    .click-ring{ position:absolute; left:0; top:0; width:10px; height:10px; border-radius:50%; border:1.6px solid rgba(255,255,255,.8); filter: drop-shadow(0 0 10px rgba(255,255,255,.8)); transform: translate(-50%,-50%) scale(.5); opacity:.9; animation: ring-expand 1.1s ease-out forwards; }
+    @keyframes ring-expand{ 0%{opacity:.9; transform:translate(-50%,-50%) scale(.5)} 70%{opacity:.45} 100%{opacity:0; transform:translate(-50%,-50%) scale(12)} }
 
-  /* background stars */
-  .sparkles{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:1}
-  .sparkles i{position:absolute; width:3px; height:3px; border-radius:50%; filter:drop-shadow(0 0 6px rgba(255,255,255,.9)); opacity:.85; animation:float 12s linear infinite, twinkle 2.6s ease-in-out infinite}
-  @keyframes twinkle{0%,100%{opacity:.3}50%{opacity:.95}}
-  @keyframes float{0%{transform:translateY(110vh)}100%{transform:translateY(-10vh)}}
+    /* toque mágico (estrelinhas + rastro) */
+    .touch-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+    .spark{ position: fixed; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%) scale(.65); background: radial-gradient(circle, #ffffff 0%, #e9eefc 45%, rgba(255,255,255,0) 70%); filter: drop-shadow(0 0 8px #ffffff); animation: spark-fade 900ms ease-out forwards; }
+    .spark.blue{ background: radial-gradient(circle, #bed6ff 0%, #94b2ff 55%, rgba(255,255,255,0) 72%); filter: drop-shadow(0 0 9px #a9c3ff); }
+    .spark.trail{ width: 6px; height: 6px; animation: spark-fade 700ms ease-out forwards; }
+    .spark.dust{ width: 5px; height: 5px; opacity:.92; animation: spark-dust 950ms ease-out forwards; }
+    @keyframes spark-fade{ 0%{ opacity:0; transform:translate(-50%,-50%) scale(.5) } 25%{ opacity:1 } 100%{ opacity:0; transform:translate(-50%,-50%) scale(1.6) } }
+    @keyframes spark-dust{ 0%{ opacity:0; transform:translate(var(--dx,0), var(--dy,0)) scale(.6) } 20%{ opacity:1 } 100%{ opacity:0; transform:translate(calc(var(--dx,0)*2.2), calc(var(--dy,0)*2.2)) scale(1.2) } }
 
-  /* splash monogram */
-  .splash__content{text-align:center; z-index:3; position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh}
-  .monogram img{width:700px; max-width:95vw; filter:drop-shadow(0 10px 18px rgba(0,0,0,.25)); animation:reveal 1200ms ease-out forwards, shimmer 5s infinite; opacity:0; transform:translateY(0) scale(.95); margin-bottom:20px}
-  @keyframes reveal{0%{opacity:0; transform:scale(1.1); filter:blur(12px)}100%{opacity:1; transform:scale(1); filter:blur(0)}}
-  @keyframes shimmer{0%,100%{filter:drop-shadow(0 10px 18px rgba(0,0,0,.25)) drop-shadow(0 0 8px rgba(255,255,255,.6))}50%{filter:drop-shadow(0 12px 22px rgba(0,0,0,.3)) drop-shadow(0 0 18px rgba(255,255,255,.9))}}
+    /* Responsividade */
+    @media (max-width: 640px){
+      #invite{ margin-top: -20px; }
+      .invite__wrap{ padding: 16px 14px 40px; }
+    }
+    @media (max-width:520px){
+      .day,.hour{font-size:72px}
+      .guest-row{grid-template-columns:1fr 120px 32px}
+    }
 
-  /* invite */
-  #invite{opacity:0; transform:translateY(40px); transition:opacity 900ms ease, transform 900ms ease; position:relative; z-index:2; width:100%; display:flex; justify-content:center; margin-top:24px}
-  #invite.show{opacity:1; transform:translateY(0)}
-
-  .invite__wrap{display:grid; gap:24px; place-items:center; padding:24px 16px 56px}
-
-  /* >>> Card apenas com a imagem (sem fundo/bordat/ sombra) */
-  .invite__card{
-    max-width:600px;
-    width:92vw;
-    margin:20px auto;   /* respiro */
-    padding:0;
-    background:none;
-    border:none;
-    box-shadow:none;
-    border-radius:0;
-    position:relative;
-    overflow:visible;
-    animation:fadeUp 1s ease forwards;
-    text-align:center;
-  }
-  .invite__card img{
-    display:block;
-    width:100%;
-    height:auto;
-    border-radius:16px; /* opcional: pode reduzir/aumentar */
-  }
-
-  @keyframes fadeUp{0%{opacity:0; transform:translateY(20px)}100%{opacity:1; transform:translateY(0)}}
-
-  .date-time{display:flex; justify-content:center; align-items:flex-start; gap:80px; margin:10px 0 20px; animation:fadeUp .8s ease .6s both}
-  .date-block,.time-block{display:flex; flex-direction:column; align-items:center; min-width:120px}
-  .day,.hour{font-size:90px; font-weight:900; line-height:1; color:#fff; text-shadow:0 0 10px rgba(255,255,255,.5); text-align:center}
-  .month,.label{font-size:22px; font-weight:700; text-transform:uppercase; color:#f1f3f8; letter-spacing:.12em; margin-top:8px; text-align:center}
-  .separator{width:2px; height:110px; background:var(--silver); border-radius:2px; align-self:center}
-  .place{font-size:16px; margin-top:14px; color:#f4f4f4; animation:fadeUp .8s ease .8s both}
-  .dress{margin-top:8px; color:#e0e0e0; font-weight:600; animation:fadeUp .8s ease 1s both}
-
-  .actions{display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin:10px 0 60px; animation:fadeUp .8s ease 1.2s both}
-  .action{width:110px; height:110px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,.12); border:1px solid var(--glass-brd); box-shadow:0 4px 12px rgba(16,22,35,.25), inset 0 1px 4px rgba(255,255,255,.25); transition:transform .25s ease, box-shadow .25s ease}
-  .action:hover{transform:translateY(-5px) scale(1.08); box-shadow:0 8px 18px rgba(16,22,35,.35), inset 0 2px 6px rgba(255,255,255,.3)}
-  .action img{width:42px; height:42px; object-fit:contain}
-
-  /* ===== MODAIS (Cristal) ===== */
-  .modal{position:fixed; inset:0; display:none; place-items:center; z-index:10}
-  .modal.show{display:grid}
-  .modal__backdrop{position:absolute; inset:0; background:rgba(10,16,28,.35); backdrop-filter:blur(6px)}
-  .modal__card{position:relative; width:min(680px,92vw); border-radius:28px; padding:28px 24px; background:var(--glass-bg); border:1px solid var(--glass-brd); backdrop-filter:blur(18px) saturate(160%); -webkit-backdrop-filter:blur(18px) saturate(160%); box-shadow:0 12px 30px rgba(10,16,28,.35), inset 0 1px 6px rgba(255,255,255,.2)}
-  .modal__title{margin:0 0 14px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#f4f7ff; text-align:center}
-  .modal__row{display:grid; gap:14px; margin-top:8px}
-  .field{display:flex; flex-direction:column; gap:8px}
-  .field label{font-size:13px; color:#e7eaf6; letter-spacing:.06em}
-  .input, textarea, select{border-radius:16px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.12); color:#fff; padding:14px 16px; outline:none; box-shadow:inset 0 1px 3px rgba(0,0,0,.12)}
-  textarea{min-height:96px; resize:vertical}
-
-  .toggle-row{display:flex; align-items:center; gap:10px; margin-top:4px}
-  .toggle-row input{accent-color:#cfe0ff}
-  .guest-list{display:none; gap:10px; margin-top:10px}
-  .guest-list.show{display:grid}
-  .guest-row{display:grid; grid-template-columns:1fr 150px 36px; gap:8px; align-items:center}
-  .guest-row .remove{height:40px; border-radius:10px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.08); color:#fff; cursor:pointer}
-  .add-guest{margin-top:8px; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.12); color:#fff; font-weight:600; cursor:pointer}
-
-  .modal__actions{display:flex; justify-content:space-between; gap:12px; margin-top:18px}
-  .btn{flex:1; padding:14px 16px; border-radius:16px; border:1px solid var(--glass-brd); background:rgba(255,255,255,.12); color:#fff; font-weight:700; letter-spacing:.06em; cursor:pointer; transition:transform .2s ease, box-shadow .2s ease}
-  .btn:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(16,22,35,.35)}
-  .btn--primary{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,.1))}
-  .btn--ghost{background:transparent}
-  .close-x{position:absolute; top:10px; right:12px; background:transparent; border:none; color:#e7eaf6; font-size:22px; cursor:pointer}
-  .hint{font-size:12px; color:#dde3ff; opacity:.8; margin-top:6px}
-
-  /* gifts grid inside modal */
-  .gifts{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-top:6px}
-  .gift-card{background:rgba(255,255,255,.12); border:1px solid var(--glass-brd); border-radius:20px; padding:16px; color:#fff; text-align:center; box-shadow:0 4px 12px rgba(16,22,35,.25), inset 0 1px 4px rgba(255,255,255,.25)}
-  .gift-card h3{margin:0 0 8px; font-size:16px; color:#f7f7f7}
-  .gift-card p{margin:0; font-size:13px; color:#eaeaea}
-  .gift-card.obs{background:rgba(255,255,255,.18); box-shadow:0 6px 16px rgba(16,22,35,.28), inset 0 1px 6px rgba(255,255,255,.3)}
-
-  @media (max-width:520px){
-    .day,.hour{font-size:72px}
-    .guest-row{grid-template-columns:1fr 120px 32px}
-  }
-
-  /* ===== ENVELOPE OVERLAY (atualizado) ===== */
-  .env{
-    position: fixed; inset: 0; z-index: 60;
-    display: grid; place-items: center;
-    background: rgba(20, 30, 60, .32);
-    backdrop-filter: blur(8px) saturate(140%);
-    -webkit-backdrop-filter: blur(8px) saturate(140%);
-  }
-  .env[hidden]{ display:none; }
-  .env__stage{ position: relative; display:grid; place-items:center; }
-  .env__envelope{
-    --w: clamp(320px, 86vw, 760px);
-    --h: calc(var(--w) * 0.62);
-    width: var(--w); height: var(--h); position:relative;
-    transform-style: preserve-3d; perspective: 1200px;
-    filter: drop-shadow(0 24px 36px rgba(10,16,28,.35));
-  }
-  .env__back{
-    position:absolute; inset:0; border-radius:22px;
-    background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12));
-    border:1px solid rgba(255,255,255,.45);
-    box-shadow: inset 0 1px 8px rgba(255,255,255,.22);
-    z-index:0;
-  }
-  .env__front{
-    position:absolute; left:0; right:0; bottom:0;
-    height: 62%;
-    background: rgba(255,255,255,.18);
-    border:1px solid rgba(255,255,255,.45);
-    border-top:none; border-bottom-left-radius:22px; border-bottom-right-radius:22px;
-    box-shadow: inset 0 1px 7px rgba(255,255,255,.24);
-    z-index:1;
-  }
-  .env__flap{
-    position:absolute; left:0; right:0; top:0; height:58%;
-    transform-origin: top center;
-    transform: rotateX(0deg);
-    transition: transform .95s cubic-bezier(.2,.75,.18,1);
-    background: conic-gradient(from 180deg at 50% 100%, rgba(255,255,255,.26), rgba(255,255,255,0) 62%);
-    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    border-top-left-radius:22px; border-top-right-radius:22px;
-    filter: drop-shadow(0 10px 18px rgba(16,22,35,.28));
-    z-index:2; pointer-events:none;
-  }
-
-  /* selo com monograma – sem disco de fundo e maior */
-  .env__seal{
-    position:absolute; left:50%; top:42%;
-    transform: translate(-50%, -50%);
-    width: clamp(140px, 18vw, 200px);
-    height: clamp(140px, 18vw, 200px);
-    border: none !important;
-    background: none !important;
-    box-shadow: none !important;
-    border-radius:50%;
-    display:grid; place-items:center;
-    cursor:pointer; z-index:3; pointer-events:auto;
-    transition: transform .18s ease, opacity .3s ease;
-  }
-  .env__seal::before,.env__seal::after{ content:none !important; }
-  .env__seal img{ width:100%; height:100%; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.25)); }
-  .env__seal:hover{ transform: translate(-50%, -50%) scale(1.04); }
-
-  .env.is-opening .env__flap{ transform: rotateX(-176deg); }
-  .env.is-opening .env__seal{ opacity:0; pointer-events:none; }
-
-  .invite__card.raise{ animation: invite-pop .65s cubic-bezier(.2,.75,.18,1) forwards; }
-  @keyframes invite-pop{0%{ transform: translateY(24px) scale(.985); opacity: 0 }60%{ transform: translateY(-2px) scale(1.002); opacity: .98 }100%{ transform: translateY(0) scale(1); opacity: 1 }}
-
-  /* ===== FAIRY FX (full-screen transition) ===== */
-  .fx-layer{ position: fixed; inset: 0; z-index: 99999; pointer-events:none; overflow:hidden; isolation:isolate; backface-visibility:hidden; will-change:transform,opacity; }
-  .fx-layer::before{
-    content:""; position:absolute; inset:0;
-    background: radial-gradient(circle at 50% 45%, rgba(255,255,255,.80) 0%, rgba(255,255,255,.45) 28%, rgba(255,255,255,.16) 55%, rgba(255,255,255,0) 78%);
-    filter: blur(10px);
-    animation: fx-flash 1.1s ease-out forwards;
-  }
-  @keyframes fx-flash{
-    0%{opacity:0; transform:scale(.9)}
-    30%{opacity:1; transform:scale(1)}
-    100%{opacity:0; transform:scale(1.05)}
-  }
-  .fx-spark{
-    position:absolute; width:4px; height:4px; border-radius:50%;
-    background: radial-gradient(circle, #fff, rgba(225,230,255,.9) 65%, rgba(255,255,255,0) 70%);
-    filter: drop-shadow(0 0 10px rgba(255,255,255,.9));
-    opacity:0; animation: fx-spark-pop 1.9s ease-out forwards;
-  }
-  @keyframes fx-spark-pop{
-    0%{ transform: translate3d(0,0,0) scale(.4); opacity:0 }
-    12%{ opacity:1 }
-    70%{ opacity:1 }
-    100%{ transform: translate3d(var(--dx), var(--dy), 0) scale(.9); opacity:0 }
-  }
-  .fx-spark.crystal{
-    width:0; height:0; border:none;
-    border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:10px solid rgba(255,255,255,.85);
-    filter: drop-shadow(0 0 12px rgba(255,255,255,.85));
-    transform-origin:50% 80%; animation: fx-crystal 1.1s ease-out forwards;
-  }
-  @keyframes fx-crystal{
-    0%{ transform: translate3d(0,0,0) rotate(-10deg) scale(.6); opacity:0 }
-    15%{ opacity:1 }
-    100%{ transform: translate3d(var(--dx), var(--dy), 0) rotate(10deg) scale(1); opacity:0 }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .fx-layer::before, .fx-spark{ animation-duration:.01ms; animation-iteration-count:1; }
-  }
-
-  /* CLICK FX (ripple + burst local) – (mantido caso use depois) */
-  .click-fx{ position:fixed; inset:0; pointer-events:none; z-index:70; }
-  .click-ring{
-    position:absolute; left:0; top:0; width:10px; height:10px; border-radius:50%;
-    border:1.6px solid rgba(255,255,255,.8);
-    filter: drop-shadow(0 0 10px rgba(255,255,255,.8));
-    transform: translate(-50%,-50%) scale(.5); opacity:.9; animation: ring-expand 1.1s ease-out forwards;
-  }
-  @keyframes ring-expand{
-    0%{opacity:.9; transform:translate(-50%,-50%) scale(.5)}
-    70%{opacity:.45}
-    100%{opacity:0; transform:translate(-50%,-50%) scale(12)}
-  }
-
-  /* toque mágico (estrelinhas + rastro) */
-  .touch-layer{ position: fixed; inset: 0; pointer-events: none; z-index: 5; }
-  .spark{
-    position: fixed; width: 8px; height: 8px; border-radius: 50%;
-    transform: translate(-50%, -50%) scale(.65);
-    background: radial-gradient(circle, #ffffff 0%, #e9eefc 45%, rgba(255,255,255,0) 70%);
-    filter: drop-shadow(0 0 8px #ffffff);
-    animation: spark-fade 900ms ease-out forwards;
-  }
-  .spark.blue{ background: radial-gradient(circle, #bed6ff 0%, #94b2ff 55%, rgba(255,255,255,0) 72%); filter: drop-shadow(0 0 9px #a9c3ff); }
-  .spark.trail{ width: 6px; height: 6px; animation: spark-fade 700ms ease-out forwards; }
-  .spark.dust{ width: 5px; height: 5px; opacity:.92; animation: spark-dust 950ms ease-out forwards; }
-  @keyframes spark-fade{
-    0%{ opacity:0; transform:translate(-50%,-50%) scale(.5) }
-    25%{ opacity:1 }
-    100%{ opacity:0; transform:translate(-50%,-50%) scale(1.6) }
-  }
-  @keyframes spark-dust{
-    0%{ opacity:0; transform:translate(var(--dx,0), var(--dy,0)) scale(.6) }
-    20%{ opacity:1 }
-    100%{ opacity:0; transform:translate(calc(var(--dx,0)*2.2), calc(var(--dy,0)*2.2)) scale(1.2) }
-  }
+    /* safe-area */
+    @supports (padding: max(0px)) {
+      body { padding-bottom: max(0px, env(safe-area-inset-bottom)); }
+    }
   </style>
-</head>
-<body>
-  <div class="sparkles" aria-hidden="true"></div>
-  <div class="touch-layer" aria-hidden="true"></div>
+  </head>
+  <body>
+    <div class="sparkles" aria-hidden="true"></div>
+    <div class="touch-layer" aria-hidden="true"></div>
 
-  <!-- ENVELOPE OVERLAY -->
-  <section id="envelope" class="env" aria-label="Abrir convite">
-    <div class="env__stage">
-      <div class="env__envelope">
-        <div class="env__back"></div>
-        <div class="env__front"></div>
-        <div class="env__flap"></div>
-        <button id="envSeal" class="env__seal" aria-label="Abrir envelope">
-          <img src="assets/imagens/icone-selo.png" alt="Selo" />
-        </button>
+    <!-- ENVELOPE OVERLAY -->
+    <section id="envelope" class="env" aria-label="Abrir convite">
+      <div class="env__stage">
+        <div class="env__envelope">
+          <div class="env__back"></div>
+          <div class="env__front"></div>
+          <div class="env__flap"></div>
+          <button id="envSeal" class="env__seal" aria-label="Abrir envelope">
+            <img src="assets/imagens/icone-selo.png" alt="Selo" />
+          </button>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <main id="invite" class="screen">
-    <div class="invite__wrap">
-      <div class="invite__card">
-        <img src="assets/imagens/convite.png" alt="Convite 15 anos" />
+    <main id="invite" class="screen">
+      <div class="invite__wrap">
+        <div class="invite__card">
+          <img src="assets/imagens/convite.png" alt="Convite 15 anos" />
+        </div>
+
+        <!-- COUNTDOWN -->
+        <div class="countdown-wrap">
+          <div class="countdown" aria-live="polite">
+            <div class="cd-item">
+              <div id="cd-days">--</div>
+              <small>DIAS</small>
+            </div>
+            <span aria-hidden="true">:</span>
+            <div class="cd-item">
+              <div id="cd-hours">--</div>
+              <small>HORAS</small>
+            </div>
+            <span aria-hidden="true">:</span>
+            <div class="cd-item">
+              <div id="cd-mins">--</div>
+              <small>MIN</small>
+            </div>
+            <span aria-hidden="true">:</span>
+            <div class="cd-item">
+              <div id="cd-secs">--</div>
+              <small>SEG</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="action" href="#" id="giftsBtn" title="Sugestão de presente" aria-label="Sugestão de presente">
+            <img src="assets/imagens/icone-presente.png" alt="Ícone presente" />
+          </a>
+          <a class="action" href="#" id="rsvpBtn" title="Confirmar presença" aria-label="Confirmar presença">
+            <img src="assets/imagens/icone-confirmar.png" alt="Ícone confirmar presença" />
+          </a>
+        </div>
       </div>
-<div class="countdown-wrap">
-  <div class="countdown" aria-live="polite">
-    <div class="cd-item">
-      <div id="cd-days">--</div>
-      <small>DIAS</small>
-    </div>
-    <span aria-hidden="true">:</span>
-    <div class="cd-item">
-      <div id="cd-hours">--</div>
-      <small>HORAS</small>
-    </div>
-    <span aria-hidden="true">:</span>
-    <div class="cd-item">
-      <div id="cd-mins">--</div>
-      <small>MIN</small>
-    </div>
-    <span aria-hidden="true">:</span>
-    <div class="cd-item">
-      <div id="cd-secs">--</div>
-      <small>SEG</small>
-    </div>
-  </div>
-</div>
+    </main>
 
-<style>
-.countdown {
-  display: flex;
-  gap: 14px;
-  justify-content: center;
-  align-items: center;
-  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #fff;
-  margin: 18px 0;
-}
+    <!-- GIFTS MODAL -->
+    <section id="giftsModal" class="modal" aria-hidden="true" aria-labelledby="giftsTitle" role="dialog">
+      <div class="modal__backdrop" data-close></div>
+      <div class="modal__card" role="document">
+        <button class="close-x" title="Fechar" aria-label="Fechar" data-close>&times;</button>
+        <h3 id="giftsTitle" class="modal__title">Sugestões de Presentes</h3>
+        <div class="gifts">
+          <div class="gift-card"><h3>Perfumes & Hidratantes</h3><p>Florata Red, Red Blossom, Ameixa Negra, Cereja Rouge</p></div>
+          <div class="gift-card"><h3>Livros</h3><p>Romance</p></div>
+          <div class="gift-card"><h3>Sapatos</h3><p>Tamanho 36/37</p></div>
+          <div class="gift-card"><h3>Roupas</h3><p>Tamanho P / 34-36</p></div>
+          <div class="gift-card"><h3>Maquiagem</h3><p>Itens variados</p></div>
+          <div class="gift-card"><h3>Acessórios</h3><p>Joias prateadas ou douradas, bolsas</p></div>
+          <div class="gift-card"><h3>Produtos de Beleza</h3><p>Cabelo, unhas e pele</p></div>
+          <div class="gift-card obs"><h3>Observação</h3><p>Obrigatório é sua presença!</p></div>
+        </div>
+      </div>
+    </section>
 
-.cd-item {
-  text-align: center;
-}
+    <!-- RSVP MODAL -->
+    <section id="rsvpModal" class="modal" aria-hidden="true" aria-labelledby="rsvpTitle" role="dialog">
+      <div class="modal__backdrop" data-close></div>
+      <div class="modal__card" role="document">
+        <button class="close-x" title="Fechar" aria-label="Fechar" data-close>&times;</button>
+        <h3 id="rsvpTitle" class="modal__title">Confirmar presença</h3>
+        <div class="modal__row">
+          <div class="field">
+            <label for="rsvpName">Seu nome</label>
+            <input id="rsvpName" class="input" type="text" placeholder="Ex.: Marcela Queji" />
+          </div>
 
-.cd-item div {
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1;
-}
+          <div class="field">
+            <div class="toggle-row">
+              <input type="checkbox" id="toggleGuests" />
+              <label for="toggleGuests">Vai confirmar mais alguém?</label>
+            </div>
+            <div id="guestList" class="guest-list" aria-live="polite">
+              <button type="button" class="add-guest" id="addGuestBtn">+ Adicionar pessoa</button>
+            </div>
+          </div>
 
-.cd-item small {
-  letter-spacing: .08em;
-  opacity: .9;
-  font-size: 12px;
-}
+          <div class="field">
+            <label for="rsvpMsg">Mensagem (opcional)</label>
+            <textarea id="rsvpMsg" placeholder="Escreva uma mensagem carinhosa"></textarea>
+          </div>
+          <div class="hint">Ao enviar, abriremos seu WhatsApp com a mensagem preenchida. Você poderá editar antes de enviar.</div>
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--ghost" data-close>Cancelar</button>
+          <button id="sendRsvp" class="btn btn--primary">Enviar pelo WhatsApp</button>
+        </div>
+      </div>
+    </section>
 
-.countdown span {
-  opacity: .6;
-  font-weight: 600;
-  font-size: 22px;
-}
-</style>
+    <!-- trilha de fundo -->
+    <audio id="bgMusic" src="music/Turning page.mp3" preload="auto"></audio>
 
-<script>
-  (function () {
-    // Data da festa: 20/12/2025 (mês é 0-based, então 11 = Dezembro)
-    const alvo = new Date(2025, 11, 20, 0, 0, 0);
+    <script>
+    (function () {
+      // ===== estrelas de fundo =====
+      const sparklesEl = document.querySelector('.sparkles');
 
-    const elDays  = document.getElementById('cd-days');
-    const elHours = document.getElementById('cd-hours');
-    const elMins  = document.getElementById('cd-mins');
-    const elSecs  = document.getElementById('cd-secs');
-    const cont    = document.querySelector('.countdown');
-
-    const z = (n) => String(n).padStart(2, '0');
-
-    function tick() {
-      const agora = new Date();
-      let diff = alvo - agora;
-
-      if (diff <= 0) {
-        cont.innerHTML = '<strong style="font-size:24px">Hoje é o grande dia! ✨</strong>';
-        clearInterval(tmr);
-        return;
+      for (let i = 0; i < 150; i++) {
+        const s = document.createElement('i');
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.animationDelay = (Math.random() * 12) + 's';
+        s.style.opacity = (.3 + Math.random() * .7).toFixed(2);
+        s.style.background = Math.random() > 0.5
+          ? 'radial-gradient(circle,#9fc3ff,#5c7ed6)'
+          : 'radial-gradient(circle,#fff,#d9d9ff)';
+        sparklesEl.appendChild(s);
+      }
+      for (let i = 0; i < 60; i++) {
+        const s = document.createElement('i');
+        s.className = 'b';
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.animationDelay = (Math.random() * 10) + 's';
+        s.style.opacity = (.25 + Math.random() * .75).toFixed(2);
+        s.style.width = s.style.height = (2 + Math.random() * 3) + 'px';
+        sparklesEl.appendChild(s);
       }
 
-      const s = Math.floor(diff / 1000);
-      const d = Math.floor(s / 86400);
-      const h = Math.floor((s % 86400) / 3600);
-      const m = Math.floor((s % 3600) / 60);
-      const sec = s % 60;
+      // ===== interação: brilhos seguem o dedo/mouse =====
+      let targetTX = 0, targetTY = 0, curTX = 0, curTY = 0, baseMag = 18;
+      function updateTargetFromPointer(x, y) {
+        const nx = (x / window.innerWidth)  * 2 - 1;
+        const ny = (y / window.innerHeight) * 2 - 1;
+        targetTX = -nx * baseMag; targetTY = -ny * baseMag;
+      }
+      (function animateSparklesFollow() {
+        curTX += (targetTX - curTX) * 0.12;
+        curTY += (targetTY - curTY) * 0.12;
+        sparklesEl.style.transform = `translate3d(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px, 0)`;
+        requestAnimationFrame(animateSparklesFollow);
+      })();
+      window.addEventListener('pointermove', (e)=>updateTargetFromPointer(e.clientX, e.clientY), {passive:true});
+      window.addEventListener('pointerdown', (e)=>{ baseMag = 32; updateTargetFromPointer(e.clientX, e.clientY); }, {passive:true});
+      window.addEventListener('pointerup',   ()=>{ baseMag = 18; }, {passive:true});
+      window.addEventListener('pointerleave',()=>{ targetTX = 0; targetTY = 0; }, {passive:true});
+      window.addEventListener('resize',      ()=>{ targetTX = 0; targetTY = 0; });
 
-      elDays.textContent  = d;
-      elHours.textContent = z(h);
-      elMins.textContent  = z(m);
-      elSecs.textContent  = z(sec);
-    }
+      // ===== revelar card =====
+      const invite = document.getElementById('invite');
+      setTimeout(() => { invite.classList.add('show'); }, 2800);
 
-    tick();
-    const tmr = setInterval(tick, 1000);
-  })();
-</script>
+      // ===== helpers modal open/close =====
+      function bindModal(trigger, modal){
+        const openBtn = document.getElementById(trigger);
+        const m = document.getElementById(modal);
+        const closeEls = m.querySelectorAll('[data-close]');
+        const open = (e)=>{ if(e){e.preventDefault();} m.classList.add('show'); m.setAttribute('aria-hidden','false'); };
+        const close= ()=>{ m.classList.remove('show'); m.setAttribute('aria-hidden','true'); };
+        openBtn && openBtn.addEventListener('click', open);
+        closeEls.forEach(el=> el.addEventListener('click', close));
+        m.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+      }
+      bindModal('giftsBtn','giftsModal');
 
-      <div class="actions">
-        <a class="action" href="#" id="giftsBtn" title="Sugestão de presente" aria-label="Sugestão de presente">
-          <img src="assets/imagens/icone-presente.png" alt="Ícone presente" />
-        </a>
-        <a class="action" href="#" id="rsvpBtn" title="Confirmar presença" aria-label="Confirmar presença">
-          <img src="assets/imagens/icone-confirmar.png" alt="Ícone confirmar presença" />
-        </a>
-      </div>
-    </div>
-  </main>
+      // ===== RSVP modal logic =====
+      const WHATSAPP_NUMBER = '554299140575';
+      bindModal('rsvpBtn','rsvpModal');
 
-  <!-- GIFTS MODAL -->
-  <section id="giftsModal" class="modal" aria-hidden="true" aria-labelledby="giftsTitle" role="dialog">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__card" role="document">
-      <button class="close-x" title="Fechar" aria-label="Fechar" data-close>&times;</button>
-      <h3 id="giftsTitle" class="modal__title">Sugestões de Presentes</h3>
-      <div class="gifts">
-        <div class="gift-card"><h3>Perfumes & Hidratantes</h3><p>Florata Red, Red Blossom, Ameixa Negra, Cereja Rouge</p></div>
-        <div class="gift-card"><h3>Livros</h3><p>Romance</p></div>
-        <div class="gift-card"><h3>Sapatos</h3><p>Tamanho 36/37</p></div>
-        <div class="gift-card"><h3>Roupas</h3><p>Tamanho P / 34-36</p></div>
-        <div class="gift-card"><h3>Maquiagem</h3><p>Itens variados</p></div>
-        <div class="gift-card"><h3>Acessórios</h3><p>Joias prateadas ou douradas, bolsas</p></div>
-        <div class="gift-card"><h3>Produtos de Beleza</h3><p>Cabelo, unhas e pele</p></div>
-        <div class="gift-card obs"><h3>Observação</h3><p>Obrigatório é sua presença!</p></div>
-      </div>
-    </div>
-  </section>
+      const guestList = document.getElementById('guestList');
+      const toggleGuests = document.getElementById('toggleGuests');
+      const addGuestBtn = document.getElementById('addGuestBtn');
 
-  <!-- RSVP MODAL -->
-  <section id="rsvpModal" class="modal" aria-hidden="true" aria-labelledby="rsvpTitle" role="dialog">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__card" role="document">
-      <button class="close-x" title="Fechar" aria-label="Fechar" data-close>&times;</button>
-      <h3 id="rsvpTitle" class="modal__title">Confirmar presença</h3>
-      <div class="modal__row">
-        <div class="field">
-          <label for="rsvpName">Seu nome</label>
-          <input id="rsvpName" class="input" type="text" placeholder="Ex.: Marcela Queij" />
-        </div>
+      toggleGuests.addEventListener('change', ()=>{
+        guestList.classList.toggle('show', toggleGuests.checked);
+        if(toggleGuests.checked && guestList.querySelectorAll('.guest-row').length===0){
+          addGuestRow();
+        }
+      });
 
-        <div class="field">
-          <div class="toggle-row">
-            <input type="checkbox" id="toggleGuests" />
-            <label for="toggleGuests">Vai confirmar mais alguém?</label>
-          </div>
-          <div id="guestList" class="guest-list" aria-live="polite">
-            <button type="button" class="add-guest" id="addGuestBtn">+ Adicionar pessoa</button>
-          </div>
-        </div>
+      function addGuestRow(name=''){
+        const row = document.createElement('div');
+        row.className = 'guest-row';
+        row.innerHTML = `
+          <input class="input guest-name" type="text" placeholder="Nome do convidado" value="${name}" />
+          <select class="input guest-type">
+            <option value="Adulto">Adulto</option>
+            <option value="Criança">Criança</option>
+          </select>
+          <button type="button" class="remove" title="Remover" aria-label="Remover">×</button>
+        `;
+        row.querySelector('.remove').addEventListener('click', ()=> row.remove());
+        guestList.insertBefore(row, addGuestBtn);
+      }
+      addGuestBtn.addEventListener('click', ()=> addGuestRow());
 
-        <div class="field">
-          <label for="rsvpMsg">Mensagem (opcional)</label>
-          <textarea id="rsvpMsg" placeholder="Escreva uma mensagem carinhosa"></textarea>
-        </div>
-        <div class="hint">Ao enviar, abriremos seu WhatsApp com a mensagem preenchida. Você poderá editar antes de enviar.</div>
-      </div>
-      <div class="modal__actions">
-        <button class="btn btn--ghost" data-close>Cancelar</button>
-        <button id="sendRsvp" class="btn btn--primary">Enviar pelo WhatsApp</button>
-      </div>
-    </div>
-  </section>
+      document.getElementById('sendRsvp').addEventListener('click', ()=>{
+        const name   = document.getElementById('rsvpName').value.trim();
+        const note   = document.getElementById('rsvpMsg').value.trim();
+        if(!name){ alert('Por favor, informe seu nome.'); return; }
 
-<script>
-(() => {
-  // ===== estrelas de fundo =====
-  const sparklesEl = document.querySelector('.sparkles');
+        const rows = [...guestList.querySelectorAll('.guest-row')];
+        const extra = rows.map(r=>{
+          const n = r.querySelector('.guest-name').value.trim();
+          const t = r.querySelector('.guest-type').value;
+          return n? `${n} (${t})` : '';
+        }).filter(Boolean);
 
-  for (let i = 0; i < 150; i++) {
-    const s = document.createElement('i');
-    s.style.left = Math.random() * 100 + 'vw';
-    s.style.animationDelay = (Math.random() * 12) + 's';
-    s.style.opacity = (.3 + Math.random() * .7).toFixed(2);
-    s.style.background = Math.random() > 0.5
-      ? 'radial-gradient(circle,#9fc3ff,#5c7ed6)'
-      : 'radial-gradient(circle,#fff,#d9d9ff)';
-    sparklesEl.appendChild(s);
-  }
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement('i');
-    s.className = 'b';
-    s.style.left = Math.random() * 100 + 'vw';
-    s.style.animationDelay = (Math.random() * 10) + 's';
-    s.style.opacity = (.25 + Math.random() * .75).toFixed(2);
-    s.style.width = s.style.height = (2 + Math.random() * 3) + 'px';
-    sparklesEl.appendChild(s);
-  }
+        const total = 1 + extra.length;
 
-  // ===== interação: brilhos seguem o dedo/mouse =====
-  let targetTX = 0, targetTY = 0;
-  let curTX = 0, curTY = 0;
-  let baseMag = 18;
+        let text = `Olá! Quero confirmar presença no aniversário de 15 anos da Lia Isabelli.\n`+
+                  `Nome: ${name}\nTotal de pessoas: ${total}`;
+        if(extra.length){
+          text += `\nAcompanhantes:`;
+          extra.forEach((e)=>{ text += `\n - ${e}`; });
+        }
+        if(note) text += `\nMensagem: ${note}`;
 
-  function updateTargetFromPointer(x, y) {
-    const nx = (x / window.innerWidth)  * 2 - 1;
-    const ny = (y / window.innerHeight) * 2 - 1;
-    targetTX = -nx * baseMag;
-    targetTY = -ny * baseMag;
-  }
+        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        document.getElementById('rsvpModal').classList.remove('show');
+      });
 
-  (function animateSparklesFollow() {
-    curTX += (targetTX - curTX) * 0.12;
-    curTY += (targetTY - curTY) * 0.12;
-    sparklesEl.style.transform = `translate3d(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px, 0)`;
-    requestAnimationFrame(animateSparklesFollow);
-  })();
+      // ===== Fairy FX (full-screen transition) =====
+      function playFairyFx() {
+        const fxLayer = document.createElement('div');
+        fxLayer.className = 'fx-layer';
+        document.body.appendChild(fxLayer);
 
-  window.addEventListener('pointermove', (e) => { updateTargetFromPointer(e.clientX, e.clientY); }, { passive: true });
-  window.addEventListener('pointerdown', (e) => { baseMag = 32; updateTargetFromPointer(e.clientX, e.clientY); }, { passive: true });
-  window.addEventListener('pointerup',   () => { baseMag = 18; }, { passive: true });
-  window.addEventListener('pointerleave',() => { targetTX = 0; targetTY = 0; }, { passive: true });
-  window.addEventListener('resize',      () => { targetTX = 0; targetTY = 0; });
+        const N = Math.floor(18 + Math.random()*8);
+        const rect = fxLayer.getBoundingClientRect();
+        const cx = rect.width/2, cy = rect.height*0.42;
+        const maxR = Math.hypot(rect.width, rect.height) * 0.55;
 
-  // ===== revelar card =====
-  const invite = document.getElementById('invite');
-  setTimeout(() => { invite.classList.add('show'); }, 2800);
+        for(let i=0;i<N;i++){
+          const isCrystal = Math.random() < 0.18;
+          const s = document.createElement('i');
+          s.className = 'fx-spark' + (isCrystal ? ' crystal' : '');
+          const startX = cx + (Math.random()*80 - 40);
+          const startY = cy + (Math.random()*60 - 30);
+          s.style.left = startX+'px';
+          s.style.top  = startY+'px';
+          const radius = 0.45*maxR + Math.random()*0.55*maxR;
+          const angle  = Math.random()*Math.PI*2;
+          const dx = Math.cos(angle)*radius;
+          const dy = Math.sin(angle)*radius;
+          s.style.setProperty('--dx', dx+'px');
+          s.style.setProperty('--dy', dy+'px');
+          s.style.animationDelay = (0.28 + Math.random()*0.60)+'s';
+          fxLayer.appendChild(s);
+        }
+        setTimeout(()=> fxLayer.remove(), 2400);
+      }
+      window.playFairyFx = playFairyFx;
 
-  // ===== helpers modal open/close =====
-  function bindModal(trigger, modal){
-    const openBtn = document.getElementById(trigger);
-    const m = document.getElementById(modal);
-    const closeEls = m.querySelectorAll('[data-close]');
-    const open = (e)=>{ if(e){e.preventDefault();} m.classList.add('show'); m.setAttribute('aria-hidden','false'); };
-    const close= ()=>{ m.classList.remove('show'); m.setAttribute('aria-hidden','true'); };
-    openBtn && openBtn.addEventListener('click', open);
-    closeEls.forEach(el=> el.addEventListener('click', close));
-    m.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
-  }
-  bindModal('giftsBtn','giftsModal');
+      // ===== ENVELOPE logic =====
+      const env = document.getElementById('envelope');
+      const envSeal = document.getElementById('envSeal');
+      const card = document.querySelector('.invite__card');
 
-  // ===== RSVP modal logic =====
-  const WHATSAPP_NUMBER = '554299140575';
-  bindModal('rsvpBtn','rsvpModal');
+      if (env && envSeal) {
+        envSeal.addEventListener('click', () => {
+          setTimeout(playFairyFx, 120);
+          env.classList.add('is-opening');
+          card && card.classList.add('raise');
+          setTimeout(() => { env.setAttribute('hidden',''); }, 950);
+        });
+      }
 
-  const guestList = document.getElementById('guestList');
-  const toggleGuests = document.getElementById('toggleGuests');
-  const addGuestBtn = document.getElementById('addGuestBtn');
+      // ===== COUNTDOWN =====
+      const alvo = new Date(2025, 11, 20, 0, 0, 0); // 20/12/2025
+      const elDays  = document.getElementById('cd-days');
+      const elHours = document.getElementById('cd-hours');
+      const elMins  = document.getElementById('cd-mins');
+      const elSecs  = document.getElementById('cd-secs');
+      const cont    = document.querySelector('.countdown');
+      const z = (n) => String(n).padStart(2, '0');
 
-  toggleGuests.addEventListener('change', ()=>{
-    guestList.classList.toggle('show', toggleGuests.checked);
-    if(toggleGuests.checked && guestList.querySelectorAll('.guest-row').length===0){
-      addGuestRow();
-    }
-  });
+      function tick() {
+        const agora = new Date();
+        let diff = alvo - agora;
+        if (diff <= 0) {
+          cont.innerHTML = '<strong style="font-size:24px">Hoje é o grande dia! ✨</strong>';
+          clearInterval(tmr); return;
+        }
+        const s = Math.floor(diff / 1000);
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        elDays.textContent  = d;
+        elHours.textContent = z(h);
+        elMins.textContent  = z(m);
+        elSecs.textContent  = z(sec);
+      }
+      tick();
+      const tmr = setInterval(tick, 1000);
+    })();
 
-  function addGuestRow(name=''){
-    const row = document.createElement('div');
-    row.className = 'guest-row';
-    row.innerHTML = `
-      <input class="input guest-name" type="text" placeholder="Nome do convidado" value="${name}" />
-      <select class="input guest-type">
-        <option value="Adulto">Adulto</option>
-        <option value="Criança">Criança</option>
-      </select>
-      <button type="button" class="remove" title="Remover" aria-label="Remover">×</button>
-    `;
-    row.querySelector('.remove').addEventListener('click', ()=> row.remove());
-    guestList.insertBefore(row, addGuestBtn);
-  }
-  addGuestBtn.addEventListener('click', ()=> addGuestRow());
+    /* ===== toque mágico (estrelinhas + rastro) ===== */
+    (function(){
+      const layer = document.querySelector('.touch-layer');
+      if (!layer) return;
 
-  document.getElementById('sendRsvp').addEventListener('click', ()=>{
-    const name   = document.getElementById('rsvpName').value.trim();
-    const note   = document.getElementById('rsvpMsg').value.trim();
-    if(!name){ alert('Por favor, informe seu nome.'); return; }
+      function spawnSpark(x, y, opts = {}) {
+        const el = document.createElement('i');
+        el.className = 'spark'
+          + (Math.random() > 0.5 ? ' blue' : '')
+          + (opts.trail ? ' trail' : '')
+          + (opts.dust ? ' dust' : '');
+        el.style.left = x + 'px';
+        el.style.top  = y + 'px';
 
-    const rows = [...guestList.querySelectorAll('.guest-row')];
-    const extra = rows.map(r=>{
-      const n = r.querySelector('.guest-name').value.trim();
-      const t = r.querySelector('.guest-type').value;
-      return n? `${n} (${t})` : '';
-    }).filter(Boolean);
+        if (opts.dust) {
+          const ang = Math.random() * Math.PI * 2;
+          const rad = 6 + Math.random() * 10;
+          el.style.setProperty('--dx', Math.cos(ang) * rad + 'px');
+          el.style.setProperty('--dy', Math.sin(ang) * rad + 'px');
+        }
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), opts.trail ? 720 : 980);
+      }
 
-    const total = 1 + extra.length;
+      function burst(x, y) {
+        for (let i = 0; i < 10; i++) spawnSpark(x, y, { dust: true });
+        for (let i = 0; i < 4; i++)  spawnSpark(x + (Math.random()-0.5)*24, y + (Math.random()-0.5)*24);
+      }
 
-    let text = `Olá! Quero confirmar presença no aniversário de 15 anos da Lia Isabelli.\n`+
-               `Nome: ${name}\nTotal de pessoas: ${total}`;
-    if(extra.length){
-      text += `\nAcompanhantes:`;
-      extra.forEach((e)=>{ text += `\n - ${e}`; });
-    }
-    if(note) text += `\nMensagem: ${note}`;
+      let lastTrail = 0;
+      function onMove(e) {
+        const p = e.touches ? e.touches[0] : e;
+        const now = performance.now();
+        if (now - lastTrail < 22) return;
+        lastTrail = now;
+        spawnSpark(p.clientX, p.clientY, { trail: true });
+      }
+      function onStart(e) {
+        const p = e.touches ? e.touches[0] : e;
+        burst(p.clientX, p.clientY);
+      }
 
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
-    document.getElementById('rsvpModal').classList.remove('show');
-  });
+      window.addEventListener('pointerdown', onStart, { passive:true });
+      window.addEventListener('pointermove', onMove,  { passive:true });
+      window.addEventListener('touchstart', onStart,  { passive:true });
+      window.addEventListener('touchmove', onMove,    { passive:true });
+    })();
+    </script>
 
-  // ===== Fairy FX (full-screen transition) =====
-  function playFairyFx() {
-    const fxLayer = document.createElement('div');
-    fxLayer.className = 'fx-layer';
-    document.body.appendChild(fxLayer);
-
-    const N = Math.floor(18 + Math.random()*8);
-    const rect = fxLayer.getBoundingClientRect();
-    const cx = rect.width/2, cy = rect.height*0.42;
-    const maxR = Math.hypot(rect.width, rect.height) * 0.55;
-
-    for(let i=0;i<N;i++){
-      const isCrystal = Math.random() < 0.18;
-      const s = document.createElement('i');
-      s.className = 'fx-spark' + (isCrystal ? ' crystal' : '');
-      const startX = cx + (Math.random()*80 - 40);
-      const startY = cy + (Math.random()*60 - 30);
-      s.style.left = startX+'px';
-      s.style.top  = startY+'px';
-      const radius = 0.45*maxR + Math.random()*0.55*maxR;
-      const angle  = Math.random()*Math.PI*2;
-      const dx = Math.cos(angle)*radius;
-      const dy = Math.sin(angle)*radius;
-      s.style.setProperty('--dx', dx+'px');
-      s.style.setProperty('--dy', dy+'px');
-      s.style.animationDelay = (0.28 + Math.random()*0.60)+'s';
-      fxLayer.appendChild(s);
-    }
-    setTimeout(()=> fxLayer.remove(), 2400);
-  }
-  window.playFairyFx = playFairyFx;
-
-  // ===== ENVELOPE logic =====
-  const env = document.getElementById('envelope');
-  const envSeal = document.getElementById('envSeal');
-  const card = document.querySelector('.invite__card');
-
-  if (env && envSeal) {
-    envSeal.addEventListener('click', () => {
-      setTimeout(playFairyFx, 120);
-      env.classList.add('is-opening');
-      card && card.classList.add('raise');
-      setTimeout(() => { env.setAttribute('hidden',''); }, 950);
-    });
-  }
-})(); // fim IIFE
-
-/* ===== toque mágico (estrelinhas + rastro) ===== */
-(function(){
-  const layer = document.querySelector('.touch-layer');
-  if (!layer) return;
-
-  function spawnSpark(x, y, opts = {}) {
-    const el = document.createElement('i');
-    el.className = 'spark'
-      + (Math.random() > 0.5 ? ' blue' : '')
-      + (opts.trail ? ' trail' : '')
-      + (opts.dust ? ' dust' : '');
-    el.style.left = x + 'px';
-    el.style.top  = y + 'px';
-
-    if (opts.dust) {
-      const ang = Math.random() * Math.PI * 2;
-      const rad = 6 + Math.random() * 10;
-      el.style.setProperty('--dx', Math.cos(ang) * rad + 'px');
-      el.style.setProperty('--dy', Math.sin(ang) * rad + 'px');
-    }
-
-    layer.appendChild(el);
-    setTimeout(() => el.remove(), opts.trail ? 720 : 980);
-  }
-
-  function burst(x, y) {
-    for (let i = 0; i < 10; i++) spawnSpark(x, y, { dust: true });
-    for (let i = 0; i < 4; i++)  spawnSpark(x + (Math.random()-0.5)*24, y + (Math.random()-0.5)*24);
-  }
-
-  let lastTrail = 0;
-  function onMove(e) {
-    const p = e.touches ? e.touches[0] : e;
-    const now = performance.now();
-    if (now - lastTrail < 22) return;
-    lastTrail = now;
-    spawnSpark(p.clientX, p.clientY, { trail: true });
-  }
-
-  function onStart(e) {
-    const p = e.touches ? e.touches[0] : e;
-    burst(p.clientX, p.clientY);
-  }
-
-  window.addEventListener('pointerdown', onStart, { passive:true });
-  window.addEventListener('pointermove', onMove,  { passive:true });
-  window.addEventListener('touchstart', onStart,  { passive:true });
-  window.addEventListener('touchmove', onMove,    { passive:true });
-})();
-</script>
-
-<!-- trilha de fundo -->
-<audio id="bgMusic" src="music/Turning page.mp3" preload="auto"></audio>
-
-<script>
-  // tocar música ao abrir o envelope
-  const bgMusic = document.getElementById('bgMusic');
-  function playMusic(){
-    if(!bgMusic) return;
-    bgMusic.volume = 0.7;
-    bgMusic.loop = true;
-    bgMusic.play().catch(() => {
-      const retry = () => { bgMusic.play().finally(() => document.removeEventListener('click', retry)); };
-      document.addEventListener('click', retry, { once:true });
-    });
-  }
-  const selo = document.querySelector('.env__seal');
-  if (selo){
-    selo.addEventListener('click', playMusic, { once:true });
-  } else {
-    document.addEventListener('click', playMusic, { once:true });
-  }
-</script>
-
-</body>
-</html>
+    <!-- trilha de fundo -->
+    <audio id="bgMusic" src="music/Turning page.mp3" preload="auto"></audio>
+    <script>
+      // tocar música ao abrir o envelope
+      const bgMusic = document.getElementById('bgMusic');
+      function playMusic(){
+        if(!bgMusic) return;
+        bgMusic.volume = 0.7;
+        bgMusic.loop = true;
+        bgMusic.play().catch(() => {
+          const retry = () => { bgMusic.play().finally(() => document.removeEventListener('click', retry)); };
+          document.addEventListener('click', retry, { once:true });
+        });
+      }
+      const selo = document.querySelector('.env__seal');
+      if (selo){ selo.addEventListener('click', playMusic, { once:true }); }
+      else { document.addEventListener('click', playMusic, { once:true }); }
+    </script>
+  </body>
+  </html>
